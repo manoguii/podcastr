@@ -14,7 +14,7 @@
   ul {
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    // grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
 
     li {
@@ -73,11 +73,6 @@
     font-weight: 600;
     text-decoration: none;
     line-height: 1.4rem;
-
-    // max-width: 70%;
-    // white-space: nowrap;
-    // overflow: hidden;
-    // text-overflow: ellipsis;
 
     &:hover {
       text-decoration: underline;

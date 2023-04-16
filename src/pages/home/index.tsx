@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import styles from './styles.module.scss'
 import Link from 'next/link'
+import { useContext } from 'react'
+import { PlayerContext } from '@/contexts/PlayerContext'
 
 type Episode = {
   id: string
@@ -19,6 +21,8 @@ interface HomeProps {
 }
 
 export default function Home({ allEpisodes, latestEpisodes }: HomeProps) {
+  const { play } = useContext(PlayerContext)
+
   return (
     <div className={styles.homepage}>
       <section className={styles.latestEpisodes}>
@@ -43,7 +47,7 @@ export default function Home({ allEpisodes, latestEpisodes }: HomeProps) {
                   <span>{episode.durationAsString}</span>
                 </div>
 
-                <button type="button">
+                <button type="button" onClick={() => play(episode)}>
                   <Image
                     src="/play-green.svg"
                     alt="Tocar episodio"

@@ -1,9 +1,14 @@
 .episode {
-  max-width: 45rem;
+  max-width: calc(100vw - 26.5rem);
+  height: calc(100vh - 6.5rem);
   padding: 3rem 2rem;
   margin: 0 auto;
+  overflow-y: scroll;
+
 
   .thumbnailContainer {
+    max-width: 656px;
+    margin: 0 auto;
     position: relative;
 
     img {

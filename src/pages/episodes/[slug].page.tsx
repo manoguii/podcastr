@@ -38,7 +38,13 @@ export default function Episodes({ episode }: EpisodesProps) {
           <Image src="/arrow-left.svg" alt="Voltar" width={25} height={25} />
         </button>
 
-        <Image src={episode.thumbnail} alt="" width={656} height={160} />
+        <Image
+          src={episode.thumbnail}
+          alt=""
+          width={656}
+          height={160}
+          quality={100}
+        />
 
         <button type="button">
           <Image src="/play.svg" alt="Tocar episodio" width={25} height={25} />
@@ -63,8 +69,8 @@ export default function Episodes({ episode }: EpisodesProps) {
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
   return {
-    fallback: 'blocking',
     paths: [],
+    fallback: 'blocking',
   }
 }
 

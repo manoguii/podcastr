@@ -3,16 +3,19 @@ import styles from '../styles/app.module.scss'
 import { Header } from '@/components/Header'
 import { Player } from '@/components/Player'
 import type { AppProps } from 'next/app'
+import { PlayerContextProvider } from '@/contexts/PlayerContext'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div className={styles.wrapper}>
-      <main>
-        <Header />
-        <Component {...pageProps} />
-      </main>
+    <PlayerContextProvider>
+      <div className={styles.wrapper}>
+        <main>
+          <Header />
+          <Component {...pageProps} />
+        </main>
 
-      <Player />
-    </div>
+        <Player />
+      </div>
+    </PlayerContextProvider>
   )
 }
