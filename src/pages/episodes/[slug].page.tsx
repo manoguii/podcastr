@@ -7,6 +7,8 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
 import styles from './styles.module.scss'
 import Image from 'next/image'
+import { usePlayer } from '@/hooks/usePlayer'
+import Head from 'next/head'
 
 type Episode = {
   id: string
@@ -25,6 +27,8 @@ interface EpisodesProps {
 }
 
 export default function Episodes({ episode }: EpisodesProps) {
+  const { play } = usePlayer()
+
   const router = useRouter()
 
   async function handleGoBack() {
@@ -32,38 +36,49 @@ export default function Episodes({ episode }: EpisodesProps) {
   }
 
   return (
-    <div className={styles.episode}>
-      <div className={styles.thumbnailContainer}>
-        <button type="button" onClick={handleGoBack}>
-          <Image src="/arrow-left.svg" alt="Voltar" width={25} height={25} />
-        </button>
+    <>
+      <Head>
+        <title>{`${episode.title}`} | Podcastr</title>
+      </Head>
 
-        <Image
-          src={episode.thumbnail}
-          alt=""
-          width={656}
-          height={160}
-          quality={100}
+      <div className={styles.episode}>
+        <div className={styles.thumbnailContainer}>
+          <button type="button" onClick={handleGoBack}>
+            <Image src="/arrow-left.svg" alt="Voltar" width={25} height={25} />
+          </button>
+
+          <Image
+            src={episode.thumbnail}
+            alt=""
+            width={656}
+            height={160}
+            quality={100}
+          />
+
+          <button type="button" onClick={() => play(episode)}>
+            <Image
+              src="/play.svg"
+              alt="Tocar episodio"
+              width={25}
+              height={25}
+            />
+          </button>
+        </div>
+
+        <header>
+          <h1>{episode.title}</h1>
+
+          <span>{episode.members}</span>
+          <span>{episode.publishedAt}</span>
+          <span>{episode.durationAsString}</span>
+        </header>
+
+        <div
+          className={styles.description}
+          dangerouslySetInnerHTML={{ __html: episode.description }}
         />
-
-        <button type="button">
-          <Image src="/play.svg" alt="Tocar episodio" width={25} height={25} />
-        </button>
       </div>
-
-      <header>
-        <h1>{episode.title}</h1>
-
-        <span>{episode.members}</span>
-        <span>{episode.publishedAt}</span>
-        <span>{episode.durationAsString}</span>
-      </header>
-
-      <div
-        className={styles.description}
-        dangerouslySetInnerHTML={{ __html: episode.description }}
-      />
-    </div>
+    </>
   )
 }
 

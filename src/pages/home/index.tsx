@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import styles from './styles.module.scss'
 import Link from 'next/link'
-import { useContext } from 'react'
-import { PlayerContext } from '@/contexts/PlayerContext'
+import { usePlayer } from '@/hooks/usePlayer'
+import Head from 'next/head'
 
 type Episode = {
   id: string
@@ -21,98 +21,119 @@ interface HomeProps {
 }
 
 export default function Home({ allEpisodes, latestEpisodes }: HomeProps) {
-  const { play } = useContext(PlayerContext)
+  const { playList } = usePlayer()
+
+  const episodeList = [...latestEpisodes, ...allEpisodes]
 
   return (
-    <div className={styles.homepage}>
-      <section className={styles.latestEpisodes}>
-        <h2>Últimos lançamentos</h2>
+    <>
+      <Head>
+        <title>Home | Podcastr</title>
+      </Head>
 
-        <ul>
-          {latestEpisodes.map((episode) => {
-            return (
-              <li key={episode.id}>
-                <Image
-                  src={episode.thumbnail}
-                  alt={episode.title}
-                  width={192}
-                  height={192}
-                  quality={100}
-                />
+      <div className={styles.homepage}>
+        <section className={styles.latestEpisodes}>
+          <h2>Últimos lançamentos</h2>
 
-                <div className={styles.episodeDetails}>
-                  <Link href={`/episodes/${episode.id}`}>{episode.title}</Link>
-                  <p>{episode.members}</p>
-                  <span>{episode.publishedAt}</span>
-                  <span>{episode.durationAsString}</span>
-                </div>
-
-                <button type="button" onClick={() => play(episode)}>
+          <ul>
+            {latestEpisodes.map((episode, index) => {
+              return (
+                <li key={episode.id}>
                   <Image
-                    src="/play-green.svg"
-                    alt="Tocar episodio"
-                    width={25}
-                    height={25}
+                    src={episode.thumbnail}
+                    alt={episode.title}
+                    width={192}
+                    height={192}
                     quality={100}
                   />
-                </button>
-              </li>
-            )
-          })}
-        </ul>
-      </section>
 
-      <section className={styles.allEpisodes}>
-        <h2>Todos episódios</h2>
-
-        <table cellSpacing={0}>
-          <thead>
-            <tr>
-              <th></th>
-              <th>Podcasts</th>
-              <th>Integrantes</th>
-              <th>Data</th>
-              <th>Duração</th>
-              <th></th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {allEpisodes.map((episode) => {
-              return (
-                <tr key={episode.id}>
-                  <td>
-                    <Image
-                      src={episode.thumbnail}
-                      alt={episode.title}
-                      width={120}
-                      height={120}
-                    />
-                  </td>
-                  <td>
-                    <Link href={`episodes/${episode.id}`} title={episode.title}>
+                  <div className={styles.episodeDetails}>
+                    <Link href={`/episodes/${episode.id}`}>
                       {episode.title}
                     </Link>
-                  </td>
-                  <td title={episode.members}>{episode.members}</td>
-                  <td style={{ width: 100 }}>{episode.publishedAt}</td>
-                  <td>{episode.durationAsString}</td>
-                  <td>
-                    <button type="button">
-                      <Image
-                        src="/play-green.svg"
-                        alt="Tocar episodio"
-                        width={25}
-                        height={25}
-                      />
-                    </button>
-                  </td>
-                </tr>
+                    <p>{episode.members}</p>
+                    <span>{episode.publishedAt}</span>
+                    <span>{episode.durationAsString}</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => playList(episodeList, index)}
+                  >
+                    <Image
+                      src="/play-green.svg"
+                      alt="Tocar episodio"
+                      width={25}
+                      height={25}
+                      quality={100}
+                    />
+                  </button>
+                </li>
               )
             })}
-          </tbody>
-        </table>
-      </section>
-    </div>
+          </ul>
+        </section>
+
+        <section className={styles.allEpisodes}>
+          <h2>Todos episódios</h2>
+
+          <table cellSpacing={0}>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Podcasts</th>
+                <th>Integrantes</th>
+                <th>Data</th>
+                <th>Duração</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {allEpisodes.map((episode, index) => {
+                return (
+                  <tr key={episode.id}>
+                    <td>
+                      <Image
+                        src={episode.thumbnail}
+                        alt={episode.title}
+                        width={120}
+                        height={120}
+                      />
+                    </td>
+                    <td>
+                      <Link
+                        href={`episodes/${episode.id}`}
+                        title={episode.title}
+                      >
+                        {episode.title}
+                      </Link>
+                    </td>
+                    <td title={episode.members}>{episode.members}</td>
+                    <td style={{ width: 100 }}>{episode.publishedAt}</td>
+                    <td>{episode.durationAsString}</td>
+                    <td>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          playList(episodeList, index + latestEpisodes.length)
+                        }
+                      >
+                        <Image
+                          src="/play-green.svg"
+                          alt="Tocar episodio"
+                          width={25}
+                          height={25}
+                        />
+                      </button>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </>
   )
 }
